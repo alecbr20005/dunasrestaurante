@@ -24,6 +24,7 @@
       "imageAvailable": true,
       "model": {
         "src": "assets/modelos/tartar-atun.glb",
+        "iosSrc": null,
         "available": false,
         "provenance": null
       }
@@ -50,6 +51,7 @@
       "imageAvailable": true,
       "model": {
         "src": "assets/modelos/merluza-gulas.glb",
+        "iosSrc": null,
         "available": false,
         "provenance": null
       }
@@ -76,6 +78,7 @@
       "imageAvailable": true,
       "model": {
         "src": "assets/modelos/canelon-carrillada.glb",
+        "iosSrc": null,
         "available": false,
         "provenance": null
       }
@@ -102,6 +105,7 @@
       "imageAvailable": true,
       "model": {
         "src": "assets/modelos/carrillada-px.glb",
+        "iosSrc": null,
         "available": false,
         "provenance": null
       }
@@ -128,6 +132,7 @@
       "imageAvailable": true,
       "model": {
         "src": "assets/modelos/pollo-curry.glb",
+        "iosSrc": null,
         "available": false,
         "provenance": null
       }

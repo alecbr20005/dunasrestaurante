@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "startScene": "principal",
+  "scenes": [
+    {
+      "id": "principal",
+      "title": "Panorámica principal",
+      "panorama": "assets/recorrido-360.png",
+      "available": true,
+      "hotSpots": []
+    }
+  ]
+}

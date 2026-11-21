@@ -97,7 +97,8 @@ function openDish(dishId, openModel = false) {
     ? `<p class="model-provenance">${dish.model.provenance === "illustrative" ? "Modelo ilustrativo" : "Modelo escaneado"}</p>
        <button class="dish-3d-button" id="detail-model-button" type="button">Ver en 3D</button>
        <div class="model-viewer-wrap" id="model-viewer-wrap" hidden></div>`
-    : "";
+    : `<div class="model-pending" role="status"><strong>Modelo 3D pendiente</strong>
+       <p>Cuando esté disponible y verificada su procedencia, se mostrará aquí. Ruta prevista: <code>${dish.model.src}</code></p></div>`;
   dishDetail.dataset.dishId = dish.id;
   dishDetail.innerHTML = `${dish.image ? imageMarkup(dish, "detail-photo") : ""}
     <p class="kicker">Ficha del plato</p><h2>${dish.name}</h2>
@@ -119,9 +120,27 @@ let modelViewerLoading;
 function ensureModelViewerLoaded() {
   if (customElements.get("model-viewer")) return Promise.resolve();
   if (!modelViewerLoading) {
-    modelViewerLoading = import("https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js");
+    const loading = import("https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js");
+    let timeoutId;
+    const timeout = new Promise((resolve, reject) => {
+      timeoutId = setTimeout(() => reject(new Error("Tiempo de espera al cargar model-viewer.")), 15000);
+    });
+    modelViewerLoading = Promise.race([loading, timeout])
+      .finally(() => clearTimeout(timeoutId))
+      .catch(error => {
+        modelViewerLoading = null;
+        throw error;
+      });
   }
   return modelViewerLoading;
+}
+
+function modelFallbackMarkup(dish, message) {
+  const photo = dish.imageAvailable && dish.image
+    ? `<img class="model-fallback-photo" src="${dish.image}" alt="Fotografía de ${dish.name}">`
+    : "";
+  return `<div class="model-unavailable" role="status">${photo}<div><strong>${message}</strong>
+    <p>El visor 3D no está disponible. Consulta la fotografía del plato mientras se incorpora un modelo válido.</p></div></div>`;
 }
 
 async function loadDishModel(dish) {
@@ -131,13 +150,10 @@ async function loadDishModel(dish) {
   wrap.hidden = false;
   wrap.innerHTML = `<div class="model-unavailable"><strong>Cargando visor 3D…</strong></div>`;
   try {
-    const response = await fetch(dish.model.src, { method:"HEAD", cache:"no-store" });
-    if (!response.ok) {
+    if (!await resourceExists(dish.model.src)) {
       dish.modelAvailable = false;
-      wrap.hidden = true;
-      wrap.replaceChildren();
-      document.querySelectorAll(`[data-open-model="${dish.id}"]`).forEach(button => button.remove());
-      document.querySelector("#detail-model-button")?.remove();
+      wrap.innerHTML = modelFallbackMarkup(dish, "No se encontró el archivo GLB.");
+      wrap.dataset.loading = "false";
       return;
     }
     await ensureModelViewerLoaded();
@@ -145,19 +161,47 @@ async function loadDishModel(dish) {
       throw new Error("No se pudo inicializar model-viewer.");
     }
     if (dishDetail.dataset.dishId !== dish.id) return;
-    wrap.innerHTML = `<model-viewer src="${dish.model.src}" alt="Modelo 3D de ${dish.name}" camera-controls touch-action="pan-y" ar ar-modes="webxr scene-viewer quick-look" shadow-intensity="1" loading="eager"><button slot="ar-button" class="ar-button" id="activate-ar" hidden>Ver en tu espacio</button></model-viewer>`;
+    const poster = dish.imageAvailable && dish.image ? `poster="${dish.image}"` : "";
+    const iosSrc = dish.model.iosSrc && /\.usdz$/i.test(dish.model.iosSrc) &&
+      await resourceExists(dish.model.iosSrc)
+      ? `ios-src="${dish.model.iosSrc}"`
+      : "";
+    wrap.innerHTML = `<model-viewer src="${dish.model.src}" ${poster} ${iosSrc} alt="Modelo 3D de ${dish.name}" camera-controls auto-rotate touch-action="pan-y" ar ar-modes="webxr scene-viewer quick-look" environment-image="neutral" shadow-intensity="1" loading="eager"><button slot="ar-button" class="ar-button" id="activate-ar" hidden>Ver en mi espacio</button></model-viewer><p class="ar-compatibility" id="ar-compatibility" role="status" hidden></p>`;
     const viewer = wrap.querySelector("model-viewer");
     const arButton = wrap.querySelector("#activate-ar");
-    const syncAR = () => { arButton.hidden = !viewer.canActivateAR; };
-    viewer.addEventListener("load", syncAR, { once:true });
+    const arCompatibility = wrap.querySelector("#ar-compatibility");
+    let modelLoaded = false;
+    const modelLoadTimeout = setTimeout(() => {
+      if (modelLoaded || !wrap.isConnected || dishDetail.dataset.dishId !== dish.id) return;
+      wrap.innerHTML = modelFallbackMarkup(dish, "El modelo 3D tardó demasiado en cargar.");
+      wrap.dataset.loading = "false";
+    }, 20000);
+    const syncAR = () => {
+      if (!modelLoaded) return;
+      const canActivateAR = Boolean(window.isSecureContext && viewer.canActivateAR);
+      arButton.hidden = !canActivateAR;
+      arCompatibility.hidden = canActivateAR;
+      arCompatibility.textContent = window.isSecureContext
+        ? "La realidad aumentada no está disponible en este dispositivo o navegador."
+        : "La realidad aumentada requiere HTTPS o localhost.";
+    };
+    viewer.addEventListener("load", () => {
+      clearTimeout(modelLoadTimeout);
+      modelLoaded = true;
+      wrap.dataset.loading = "false";
+      syncAR();
+    }, { once:true });
     viewer.addEventListener("ar-status", syncAR);
     viewer.addEventListener("error", () => {
-      wrap.innerHTML = `<div class="model-unavailable"><strong>No se pudo cargar el modelo 3D.</strong></div>`;
+      clearTimeout(modelLoadTimeout);
+      wrap.innerHTML = modelFallbackMarkup(dish, "No se pudo cargar el archivo GLB.");
       wrap.dataset.loading = "false";
     }, { once:true });
-    arButton.addEventListener("click", () => viewer.activateAR());
+    arButton.addEventListener("click", () => {
+      if (window.isSecureContext && viewer.canActivateAR) viewer.activateAR();
+    });
   } catch (error) {
-    wrap.innerHTML = `<div class="model-unavailable"><strong>No se pudo cargar el visor 3D.</strong><p>Inténtalo de nuevo más tarde.</p></div>`;
+    wrap.innerHTML = modelFallbackMarkup(dish, "No se pudo iniciar el visor 3D.");
     wrap.dataset.loading = "false";
     showToast("No se pudo iniciar el visor 3D.");
     console.error(error);
@@ -182,12 +226,11 @@ async function loadMenuData() {
     }
     menuItems = data.dishes;
     const availability = await Promise.all(menuItems.map(async dish => {
-      const [imageAvailable, modelAvailable] = await Promise.all([
-        dish.image && dish.imageAvailable ? resourceExists(dish.image) : false,
-        dish.model && dish.model.available && dish.model.src && ["illustrative", "scanned"].includes(dish.model.provenance)
-          ? resourceExists(dish.model.src)
-          : false
-      ]);
+      const imageAvailable = Boolean(dish.image && dish.imageAvailable);
+      const modelAvailable = dish.model && dish.model.available && /\.glb$/i.test(dish.model.src || "") &&
+        ["illustrative", "scanned"].includes(dish.model.provenance)
+        ? await resourceExists(dish.model.src)
+        : false;
       return { imageAvailable, modelAvailable };
     }));
     menuItems.forEach((dish, index) => {
@@ -202,11 +245,15 @@ async function loadMenuData() {
 loadMenuData();
 
 async function resourceExists(path) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
   try {
-    const response = await fetch(path, { method:"HEAD", cache:"no-store" });
+    const response = await fetch(path, { method:"HEAD", cache:"no-store", signal:controller.signal });
     return response.ok;
   } catch {
     return false;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -242,66 +289,187 @@ function initPhotoTour() {
 }
 initPhotoTour();
 
+function loadImageDimensions(path) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const timeout = setTimeout(() => reject(new Error(`Tiempo de espera al cargar ${path}.`)), 15000);
+    image.onload = () => {
+      clearTimeout(timeout);
+      resolve({ width:image.naturalWidth, height:image.naturalHeight });
+    };
+    image.onerror = () => {
+      clearTimeout(timeout);
+      reject(new Error(`No se pudo cargar ${path}.`));
+    };
+    image.src = path;
+    if (image.complete) {
+      clearTimeout(timeout);
+      if (image.naturalWidth > 0) resolve({ width:image.naturalWidth, height:image.naturalHeight });
+      else reject(new Error(`No se pudo cargar ${path}.`));
+    }
+  });
+}
+
+function isValidPanoramaScene(scene) {
+  return scene && scene.available === true &&
+    typeof scene.id === "string" && /^[a-z0-9][a-z0-9-]*$/i.test(scene.id) &&
+    typeof scene.title === "string" && typeof scene.panorama === "string";
+}
+
+function mapPanoramaHotSpots(scene, sceneIds) {
+  if (!Array.isArray(scene.hotSpots)) return [];
+  return scene.hotSpots
+    .filter(hotSpot => hotSpot && hotSpot.type === "scene" &&
+      sceneIds.has(hotSpot.sceneId) && Number.isFinite(hotSpot.pitch) &&
+      Number.isFinite(hotSpot.yaw) && typeof hotSpot.text === "string")
+    .map(hotSpot => ({
+      type:"scene",
+      sceneId:hotSpot.sceneId,
+      pitch:hotSpot.pitch,
+      yaw:hotSpot.yaw,
+      text:hotSpot.text
+    }));
+}
+
+async function ensurePannellumLoaded() {
+  if (window.pannellum) return;
+  await Promise.all([
+    loadStylesheet("https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"),
+    loadScript("https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js")
+  ]);
+  if (!window.pannellum) throw new Error("Pannellum no se pudo inicializar.");
+}
+
 async function initPanorama() {
   const panorama = document.querySelector("#panorama");
   const placeholder = document.querySelector("#tour-placeholder");
   const instructions = document.querySelector("#tour-instructions");
-  if (panorama.dataset.available !== "true") return;
-  const imagePath = panorama.dataset.src || "assets/recorrido-360.jpg";
+  if (!panorama || !placeholder || !instructions) return;
+
   try {
-    const response = await fetch(imagePath, { method:"HEAD", cache:"no-store" });
-    if (!response.ok) return;
-    const panoramaImage = new Image();
-    panoramaImage.src = imagePath;
-    await new Promise((resolve, reject) => {
-      panoramaImage.onload = resolve;
-      panoramaImage.onerror = reject;
-    });
-    const ratio = panoramaImage.naturalWidth / panoramaImage.naturalHeight;
-    if (Math.abs(ratio - 2) > 0.02) {
-      showToast("El panorama debe ser equirectangular y tener proporción 2:1.");
-      return;
+    const configPath = panorama.dataset.config || "data/panorama.json";
+    const response = await fetch(configPath);
+    if (!response.ok) throw new Error(`No se pudo cargar ${configPath} (${response.status}).`);
+    const config = await response.json();
+    if (!Array.isArray(config.scenes)) throw new Error("La configuración del recorrido no contiene escenas válidas.");
+
+    const configuredScenes = config.scenes.filter(isValidPanoramaScene);
+    if (configuredScenes.length === 0) return;
+
+    const availableScenes = [];
+    for (const scene of configuredScenes) {
+      if (!await resourceExists(scene.panorama)) {
+        if (scene.id === config.startScene) showToast("No se encontró la fotografía panorámica configurada.");
+        continue;
+      }
+      const dimensions = await loadImageDimensions(scene.panorama);
+      if (Math.abs(dimensions.width / dimensions.height - 2) / 2 > 0.02) {
+        if (scene.id === config.startScene) showToast("El panorama debe ser equirectangular y tener proporción 2:1.");
+        continue;
+      }
+      availableScenes.push({
+        ...scene,
+        vaov:Math.min(180, 360 * dimensions.height / dimensions.width)
+      });
     }
+    if (availableScenes.length === 0) return;
 
-    await Promise.all([
-      loadStylesheet("https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"),
-      loadScript("https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js")
-    ]);
-    if (!window.pannellum) throw new Error("Pannellum no se pudo inicializar.");
-
-    panorama.hidden = false;
-    const viewer = window.pannellum.viewer("panorama", {
+    await ensurePannellumLoaded();
+    const sceneIds = new Set(availableScenes.map(scene => scene.id));
+    const scenes = Object.fromEntries(availableScenes.map(scene => [scene.id, {
+      title:scene.title,
       type:"equirectangular",
-      panorama:imagePath,
+      panorama:scene.panorama,
+      vaov:scene.vaov,
+      hotSpots:mapPanoramaHotSpots(scene, sceneIds)
+    }]));
+    const firstScene = sceneIds.has(config.startScene) ? config.startScene : availableScenes[0].id;
+    const controls = {
       autoLoad:true,
       showControls:true,
-      showFullscreenCtrl:false,
+      showFullscreenCtrl:true,
       mouseZoom:true,
       doubleClickZoom:true,
       draggable:true,
       hfov:100,
       minHfov:50,
       maxHfov:110
+    };
+    const viewerConfig = availableScenes.length === 1
+      ? { ...controls, ...scenes[firstScene] }
+      : {
+          default:{ ...controls, firstScene, sceneFadeDuration:700 },
+          scenes
+        };
+
+    panorama.hidden = false;
+    const viewer = window.pannellum.viewer("panorama", viewerConfig);
+    viewer.on("load", () => {
+      placeholder.hidden = true;
+      const liveCopy = document.querySelector("#tour-live-copy");
+      if (liveCopy) liveCopy.hidden = false;
+      instructions.hidden = false;
     });
     viewer.on("error", () => {
       panorama.hidden = true;
       placeholder.hidden = false;
+      const liveCopy = document.querySelector("#tour-live-copy");
+      if (liveCopy) liveCopy.hidden = true;
       instructions.hidden = true;
       showToast("No se pudo cargar el panorama. Comprueba el archivo e inténtalo de nuevo.");
     });
-    placeholder.hidden = true;
-    instructions.hidden = false;
     setupGyroscope(viewer);
-    document.querySelector("#fullscreen-toggle").addEventListener("click", () => {
-      try {
-        viewer.toggleFullscreen();
-      } catch {
-        showToast("La pantalla completa no está disponible en este navegador.");
-      }
+    const activateOnKeyboard = (control, label, action) => {
+      if (!control) return;
+      control.setAttribute("role", "button");
+      control.tabIndex = 0;
+      control.setAttribute("aria-label", label);
+      control.addEventListener("keydown", event => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        action();
+      });
+    };
+    activateOnKeyboard(panorama.querySelector(".pnlm-zoom-in"), "Acercar vista", () => {
+      viewer.setHfov(viewer.getHfov() - 5, false);
     });
+    activateOnKeyboard(panorama.querySelector(".pnlm-zoom-out"), "Alejar vista", () => {
+      viewer.setHfov(viewer.getHfov() + 5, false);
+    });
+    const fullscreenButton = document.querySelector("#fullscreen-toggle");
+    const pannellumFullscreenControl = panorama.querySelector(".pnlm-fullscreen-toggle-button");
+    if (pannellumFullscreenControl) {
+      pannellumFullscreenControl.hidden = true;
+      activateOnKeyboard(pannellumFullscreenControl, "Entrar en pantalla completa", () => viewer.toggleFullscreen());
+    }
+    if (fullscreenButton) {
+      fullscreenButton.addEventListener("click", () => {
+        try {
+          viewer.toggleFullscreen();
+        } catch {
+          showToast("La pantalla completa no está disponible en este navegador.");
+        }
+      });
+      viewer.on("fullscreenchange", isFullscreen => {
+        const label = isFullscreen ? "Salir de pantalla completa" : "Entrar en pantalla completa";
+        fullscreenButton.textContent = label;
+        fullscreenButton.setAttribute("aria-label", label);
+        fullscreenButton.hidden = isFullscreen;
+        if (pannellumFullscreenControl) {
+          pannellumFullscreenControl.hidden = !isFullscreen;
+          pannellumFullscreenControl.setAttribute("aria-label", label);
+          pannellumFullscreenControl.title = label;
+        }
+      });
+    }
   } catch (error) {
     panorama.hidden = true;
-    showToast("No se pudo iniciar el recorrido 360°. La vista provisional sigue disponible.");
+    placeholder.hidden = false;
+    const liveCopy = document.querySelector("#tour-live-copy");
+    if (liveCopy) liveCopy.hidden = true;
+    instructions.hidden = true;
+    showToast("No se pudo iniciar el recorrido 360°. Estamos preparando nuestro recorrido 360°.");
     console.error(error);
   }
 }
@@ -310,10 +478,20 @@ initPanorama();
 function loadStylesheet(href) {
   return new Promise((resolve, reject) => {
     const link = document.createElement("link");
+    const timeout = setTimeout(() => {
+      link.remove();
+      reject(new Error("Tiempo de espera al cargar la hoja de estilos del visor."));
+    }, 15000);
     link.rel = "stylesheet";
     link.href = href;
-    link.onload = resolve;
-    link.onerror = () => reject(new Error("No se pudo cargar la hoja de estilos del visor."));
+    link.onload = () => {
+      clearTimeout(timeout);
+      resolve();
+    };
+    link.onerror = () => {
+      clearTimeout(timeout);
+      reject(new Error("No se pudo cargar la hoja de estilos del visor."));
+    };
     document.head.append(link);
   });
 }
@@ -321,10 +499,20 @@ function loadStylesheet(href) {
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
+    const timeout = setTimeout(() => {
+      script.remove();
+      reject(new Error("Tiempo de espera al cargar el visor panorámico."));
+    }, 15000);
     script.src = src;
     script.async = true;
-    script.onload = resolve;
-    script.onerror = () => reject(new Error("No se pudo cargar el visor panorámico."));
+    script.onload = () => {
+      clearTimeout(timeout);
+      resolve();
+    };
+    script.onerror = () => {
+      clearTimeout(timeout);
+      reject(new Error("No se pudo cargar el visor panorámico."));
+    };
     document.head.append(script);
   });
 }

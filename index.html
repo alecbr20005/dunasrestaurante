@@ -18,7 +18,8 @@
     </a>
     <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
     <nav class="nav" aria-label="Navegación principal">
-      <a href="#inicio">Recorrido</a>
+      <a href="#inicio">Inicio</a>
+      <a href="#recorrido-360">Recorrido 360°</a>
       <a href="#historia">Nosotros</a>
       <a href="#carta">Carta</a>
       <a href="#reservas">Reservas</a>
@@ -28,27 +29,34 @@
   </header>
 
   <main>
-    <section class="tour-hero" id="inicio" aria-labelledby="tour-title">
-      <div id="panorama" data-src="assets/recorrido-360.jpg" data-available="false" aria-label="Visor de recorrido 360 grados" hidden></div>
+    <section class="tour-hero" id="inicio" aria-label="Recorrido panorámico 360° de Las Dunas">
+      <span class="tour-anchor" id="recorrido-360" aria-hidden="true"></span>
+      <div id="panorama" data-config="data/panorama.json" aria-label="Visor de recorrido panorámico 360 grados" hidden></div>
       <div class="tour-placeholder" id="tour-placeholder">
         <img class="tour-fallback-image" id="tour-photo-image" src="assets/negocio/recorrido-exterior.jpg" alt="Fachada de Las Dunas con miembros del equipo frente a la entrada" fetchpriority="high" decoding="async">
         <div class="tour-fallback-shade" aria-hidden="true"></div>
         <div class="tour-placeholder-content">
           <p class="kicker">Recorrido fotográfico</p>
-          <h1 id="tour-title">Conoce Las Dunas</h1>
+          <h1 id="tour-title">Explora Las Dunas desde dentro</h1>
+          <p>Descubre nuestro espacio y vive la experiencia de Las Dunas antes de venir a visitarnos.</p>
           <p id="tour-photo-caption" aria-live="polite">Exterior · fachada y equipo</p>
           <div class="tour-photo-switcher" role="group" aria-label="Fotografías del restaurante">
             <button type="button" data-tour-photo="exterior" aria-pressed="true">Exterior</button>
             <button type="button" data-tour-photo="interior" aria-pressed="false">Interior</button>
           </div>
-          <span class="fallback-caption">Fotografías fijas · el panorama 360° real está pendiente</span>
+          <span class="fallback-caption" id="panorama-status">Estamos preparando nuestro recorrido 360°.</span>
         </div>
+      </div>
+      <div class="tour-live-copy" id="tour-live-copy" hidden>
+        <p class="kicker">Recorrido 360° · Las Dunas</p>
+        <h2>Explora Las Dunas desde dentro</h2>
+        <p>Descubre nuestro espacio y vive la experiencia de Las Dunas antes de venir a visitarnos.</p>
       </div>
       <div class="tour-instructions" id="tour-instructions" hidden>
         <span class="drag-icon" aria-hidden="true">↔</span>
-        <span>Arrastra para explorar</span>
+        <span>Arrastra o desliza para explorar</span>
         <button type="button" id="gyro-toggle" aria-label="Activar giroscopio">Giroscopio</button>
-        <button type="button" id="fullscreen-toggle" aria-label="Entrar en pantalla completa">Pantalla completa</button>
+        <button type="button" id="fullscreen-toggle" aria-label="Entrar en pantalla completa">Entrar en pantalla completa</button>
       </div>
       <a class="tour-menu-link" href="#carta">Ver carta</a>
     </section>
@@ -73,7 +81,6 @@
         <h2>Nuestra carta</h2>
       </div>
       <div class="dish-grid" id="dish-grid" aria-live="polite"></div>
-      <p class="allergen-reminder">Precios, descripciones, ingredientes y alérgenos de esta selección pendientes de validación por el restaurante. Si tienes alergias o intolerancias, consulta al personal.</p>
     </section>
 
     <section class="reservation section" id="reservas">
