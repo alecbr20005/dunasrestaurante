@@ -21,8 +21,10 @@
       },
       "lastReviewed": null,
       "image": "assets/platos/tartar-atun-wakame.jpg",
+      "imageAvailable": true,
       "model": {
         "src": "assets/modelos/tartar-atun.glb",
+        "available": false,
         "provenance": null
       }
     },
@@ -45,8 +47,10 @@
       },
       "lastReviewed": null,
       "image": "assets/platos/merluza-gulas-alioli-tinta.jpg",
+      "imageAvailable": true,
       "model": {
         "src": "assets/modelos/merluza-gulas.glb",
+        "available": false,
         "provenance": null
       }
     },
@@ -69,8 +73,10 @@
       },
       "lastReviewed": null,
       "image": "assets/platos/canelon-carrillada.jpg",
+      "imageAvailable": true,
       "model": {
         "src": "assets/modelos/canelon-carrillada.glb",
+        "available": false,
         "provenance": null
       }
     },
@@ -93,8 +99,10 @@
       },
       "lastReviewed": null,
       "image": "assets/platos/carrillada-iberica-px.jpg",
+      "imageAvailable": true,
       "model": {
         "src": "assets/modelos/carrillada-px.glb",
+        "available": false,
         "provenance": null
       }
     },
@@ -117,8 +125,10 @@
       },
       "lastReviewed": null,
       "image": "assets/platos/pollo-curry-rojo.jpg",
+      "imageAvailable": true,
       "model": {
         "src": "assets/modelos/pollo-curry.glb",
+        "available": false,
         "provenance": null
       }
     }

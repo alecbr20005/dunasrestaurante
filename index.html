@@ -8,9 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
   <link rel="stylesheet" href="styles.css">
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -23,27 +21,31 @@
       <a href="#inicio">Recorrido</a>
       <a href="#historia">Nosotros</a>
       <a href="#carta">Carta</a>
-      <a href="#cartas">Menús</a>
-      <a href="#food-guide">Food Guide</a>
-      <a href="#grupos">Grupos</a>
       <a href="#reservas">Reservas</a>
+      <a href="#grupos">Grupos</a>
       <a href="#contacto">Contacto</a>
     </nav>
   </header>
 
   <main>
     <section class="tour-hero" id="inicio" aria-labelledby="tour-title">
-      <div id="panorama" aria-label="Visor de recorrido 360 grados"></div>
+      <div id="panorama" data-src="assets/recorrido-360.jpg" data-available="false" aria-label="Visor de recorrido 360 grados" hidden></div>
       <div class="tour-placeholder" id="tour-placeholder">
-        <div class="placeholder-mark" aria-hidden="true">360°</div>
-        <p class="kicker">Recorrido virtual</p>
-        <h1 id="tour-title">Descubre Las Dunas por dentro</h1>
-        <p>El panorama 360° real estará disponible próximamente.</p>
+        <img class="tour-fallback-image" src="assets/las-dunas-01.jpg" alt="Vista fija del comedor de Las Dunas; no es un recorrido 360°" fetchpriority="high" decoding="async">
+        <div class="tour-fallback-shade" aria-hidden="true"></div>
+        <div class="tour-placeholder-content">
+          <div class="placeholder-mark" aria-hidden="true">360°</div>
+          <p class="kicker">Recorrido virtual</p>
+          <h1 id="tour-title">Descubre Las Dunas por dentro</h1>
+          <p>El panorama 360° real está pendiente de incorporar.</p>
+          <span class="fallback-caption">Fotografía fija del comedor · no es una vista 360°</span>
+        </div>
       </div>
       <div class="tour-instructions" id="tour-instructions" hidden>
         <span class="drag-icon" aria-hidden="true">↔</span>
         <span>Arrastra para explorar</span>
         <button type="button" id="gyro-toggle" aria-label="Activar giroscopio">Giroscopio</button>
+        <button type="button" id="fullscreen-toggle" aria-label="Entrar en pantalla completa">Pantalla completa</button>
       </div>
       <a class="tour-menu-link" href="#carta">Ver carta</a>
     </section>
@@ -58,116 +60,17 @@
         <h2>Cocina con raíces.<br>Curiosidad por lo nuevo.</h2>
         <p>En Las Dunas Vinos y Tapas nos gusta combinar la esencia de la cocina tradicional con nuevas formas de disfrutar la gastronomía. Cuidamos la materia prima, trabajamos cada detalle y queremos que cada visita sea una experiencia para recordar.</p>
         <p class="story-note">Cultura gastronómica sevillana, cocina mediterránea, atención cercana y servicio ágil.</p>
-        <a class="text-link" href="#cartas">Descubre nuestras cartas <span aria-hidden="true">→</span></a>
+        <a class="text-link" href="#carta">Ver nuestra carta <span aria-hidden="true">→</span></a>
       </div>
     </section>
 
     <section class="intro section" id="carta">
       <div class="section-heading">
-        <p class="kicker">Una selección de la casa</p>
-        <h2>Platos para descubrir</h2>
-        <p class="section-lead">Cinco propuestas destacadas. Para consultar la carta completa, los grupos y los menús de empresa, visita la sección de cartas.</p>
+        <p class="kicker">Las Dunas · Vinos y Tapas</p>
+        <h2>Nuestra carta</h2>
       </div>
-      <div class="menu-layout">
-        <aside class="menu-filters">
-          <label for="menu-search">Encuentra un plato</label>
-          <input id="menu-search" type="search" placeholder="Nombre del plato">
-          <div class="filter-pills" aria-label="Filtros">
-            <button class="filter active" data-filter="todos">Todos</button>
-            <button class="filter" data-filter="pescado">Pescado</button>
-            <button class="filter" data-filter="carne">Carne</button>
-            <button class="filter" data-filter="destacado">Destacados</button>
-          </div>
-        </aside>
-        <div class="dish-grid" id="dish-grid"></div>
-      </div>
+      <div class="dish-grid" id="dish-grid" aria-live="polite"></div>
       <p class="allergen-reminder">Precios, descripciones, ingredientes y alérgenos de esta selección pendientes de validación por el restaurante. Si tienes alergias o intolerancias, consulta al personal.</p>
-    </section>
-
-    <section class="documents section" id="cartas">
-      <div class="section-heading">
-        <p class="kicker">La propuesta completa</p>
-        <h2>Cartas y menús</h2>
-        <p class="section-lead">Consulta los documentos oficiales publicados por Las Dunas. Los precios y la disponibilidad deben confirmarse con el restaurante.</p>
-      </div>
-      <div class="document-grid">
-        <article class="document-card">
-          <span class="document-index">01 / CARTA</span>
-          <h3>Carta general</h3>
-          <p>La propuesta gastronómica del restaurante.</p>
-          <div class="document-actions">
-            <a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/carta_general_2026_4t_web.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
-            <a href="assets/cartas/carta_general_2026_4t_web.pdf" download="carta_general_2026_4t_web.pdf">Descargar PDF ↓</a>
-          </div>
-        </article>
-        <article class="document-card">
-          <span class="document-index">02 / GRUPOS</span>
-          <h3>Carta de grupos</h3>
-          <p>A partir de 8 comensales, el servicio es de platos en lugar de tapas.</p>
-          <div class="document-actions">
-            <a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/carta_grupos_2026_4t_web.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
-            <a href="assets/cartas/carta_grupos_2026_4t_web.pdf" download="carta_grupos_2026_4t_web.pdf">Descargar PDF ↓</a>
-          </div>
-        </article>
-        <article class="document-card">
-          <span class="document-index">03 / EMPRESA</span>
-          <h3>Menús concertados</h3>
-          <p>Opciones publicadas para comidas de empresa. Consulta disponibilidad y condiciones.</p>
-          <div class="document-actions">
-            <a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/Menu_empresa_2026_web.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
-            <a href="assets/cartas/Menu_empresa_2026_web.pdf" download="Menu_empresa_2026_web.pdf">Descargar PDF ↓</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="guide section" id="food-guide">
-      <div class="guide-copy">
-        <p class="kicker">Food Guide</p>
-        <h2>¿Qué te apetece hoy?</h2>
-        <p>Busca por nombre o categoría. Los ingredientes y la información de alérgenos están pendientes de validación por el restaurante.</p>
-        <label for="guide-input">Preferencia o ingrediente</label>
-        <div class="guide-input-row">
-          <input id="guide-input" type="text" placeholder="Ej. pescado, curry, carrillada">
-          <button class="button button-primary" id="guide-search">Descubrir</button>
-        </div>
-      </div>
-      <div class="guide-result" id="guide-result" aria-live="polite">
-        <span class="guide-icon">LD</span>
-        <p>Prueba con «pescado» o «carne».</p>
-      </div>
-    </section>
-
-    <section class="groups section" id="grupos">
-      <div class="groups-panel">
-        <p class="kicker">Grupos y eventos</p>
-        <h2>A partir de 8 personas,<br>servimos platos.</h2>
-        <p>Comidas de empresa, celebraciones y encuentros con amigos. Consulta los menús concertados vigentes y solicita presupuesto.</p>
-        <div class="groups-actions">
-          <a class="button button-dark" href="#cartas">Ver cartas y menús</a>
-          <a class="button button-outline" href="tel:+34955126417">Llamar para consultar</a>
-        </div>
-      </div>
-      <form class="group-form" id="group-form">
-        <h3>Solicitar presupuesto</h3>
-        <div class="form-grid">
-          <label>Nombre<input name="name" required></label>
-          <label>Teléfono<input name="phone" type="tel" required></label>
-          <label>Fecha<input name="date" type="date" required></label>
-          <label>Hora<input name="time" type="time" required></label>
-          <label>Personas<input name="people" type="number" min="8" value="8" required></label>
-        </div>
-        <label>Tipo de ocasión
-          <select name="occasion">
-            <option>Comida de empresa</option>
-            <option>Celebración</option>
-            <option>Grupo de amigos</option>
-            <option>Reunión</option>
-          </select>
-        </label>
-        <label>Observaciones<textarea name="notes" rows="3" placeholder="Cuéntanos qué necesitas"></textarea></label>
-        <button class="button button-primary" type="submit">Preparar solicitud</button>
-      </form>
     </section>
 
     <section class="reservation section" id="reservas">
@@ -183,7 +86,7 @@
       <form class="reservation-form" id="reservation-form">
         <div class="form-grid">
           <label>Nombre<input name="name" required></label>
-          <label>Teléfono<input name="phone" type="tel" required></label>
+          <label>Teléfono<input name="phone" type="tel" pattern="[0-9+\s]{9,18}" title="Introduce un número de teléfono válido." required></label>
           <label>Fecha<input name="date" type="date" required></label>
           <label>Hora<input name="time" type="time" required></label>
           <label>Comensales<input name="people" type="number" min="1" value="2" required></label>
@@ -199,6 +102,38 @@
         <label>Observaciones<textarea name="notes" rows="3"></textarea></label>
         <button class="button button-primary" type="submit">Solicitar por WhatsApp</button>
         <p class="form-note">La solicitud no confirma una reserva hasta que el restaurante la valide.</p>
+      </form>
+    </section>
+
+    <section class="groups section" id="grupos">
+      <div class="groups-panel">
+        <p class="kicker">Grupos y eventos</p>
+        <h2>A partir de 8 personas,<br>servimos platos.</h2>
+        <p>Comidas de empresa, celebraciones y encuentros con amigos. Contacta con el restaurante para consultar disponibilidad y solicitar presupuesto.</p>
+        <div class="groups-actions">
+          <a class="button button-dark" href="#group-form">Solicitar presupuesto</a>
+          <a class="button button-outline" href="tel:+34955126417">Llamar para consultar</a>
+        </div>
+      </div>
+      <form class="group-form" id="group-form">
+        <h3>Solicitar presupuesto</h3>
+        <div class="form-grid">
+          <label>Nombre<input name="name" required></label>
+          <label>Teléfono<input name="phone" type="tel" pattern="[0-9+\s]{9,18}" title="Introduce un número de teléfono válido." required></label>
+          <label>Fecha<input name="date" type="date" required></label>
+          <label>Hora<input name="time" type="time" required></label>
+          <label>Personas<input name="people" type="number" min="8" value="8" required></label>
+        </div>
+        <label>Tipo de ocasión
+          <select name="occasion">
+            <option>Comida de empresa</option>
+            <option>Celebración</option>
+            <option>Grupo de amigos</option>
+            <option>Reunión</option>
+          </select>
+        </label>
+        <label>Observaciones<textarea name="notes" rows="3" placeholder="Cuéntanos qué necesitas"></textarea></label>
+        <button class="button button-primary" type="submit">Preparar solicitud</button>
       </form>
     </section>
 
@@ -259,7 +194,7 @@
   <footer>
     <img src="assets/logo.png" alt="Las Dunas">
     <p><strong>LAS DUNAS</strong><br>Vinos y Tapas · Sevilla Este</p>
-    <div><a href="#inicio">Recorrido</a><a href="#historia">Nosotros</a><a href="#carta">Carta</a><a href="#cartas">Menús</a><a href="#reservas">Reservas</a></div>
+    <div><a href="#inicio">Recorrido</a><a href="#historia">Nosotros</a><a href="#carta">Carta</a><a href="#reservas">Reservas</a><a href="#grupos">Grupos</a><a href="#contacto">Contacto</a></div>
   </footer>
 
   <dialog id="dish-dialog" class="dialog">
@@ -268,7 +203,6 @@
   </dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
