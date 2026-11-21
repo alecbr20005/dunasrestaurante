@@ -213,6 +213,35 @@ async function resourceExists(path) {
 document.querySelectorAll(".dialog-close").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
 dishDialog.addEventListener("click", event => { if (event.target === dishDialog) dishDialog.close(); });
 
+function initPhotoTour() {
+  const image = document.querySelector("#tour-photo-image");
+  const caption = document.querySelector("#tour-photo-caption");
+  const buttons = [...document.querySelectorAll("[data-tour-photo]")];
+  const photos = {
+    exterior: {
+      src:"assets/negocio/recorrido-exterior.jpg",
+      alt:"Fachada de Las Dunas con miembros del equipo frente a la entrada",
+      caption:"Exterior · fachada y equipo"
+    },
+    interior: {
+      src:"assets/negocio/recorrido-interior.jpg",
+      alt:"Vista del interior de Las Dunas, con la barra y el salón",
+      caption:"Interior · barra y salón"
+    }
+  };
+  if (!image || !caption || buttons.length === 0) return;
+
+  buttons.forEach(button => button.addEventListener("click", () => {
+    const photo = photos[button.dataset.tourPhoto];
+    if (!photo) return;
+    image.src = photo.src;
+    image.alt = photo.alt;
+    caption.textContent = photo.caption;
+    buttons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+  }));
+}
+initPhotoTour();
+
 async function initPanorama() {
   const panorama = document.querySelector("#panorama");
   const placeholder = document.querySelector("#tour-placeholder");

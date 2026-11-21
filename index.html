@@ -31,14 +31,17 @@
     <section class="tour-hero" id="inicio" aria-labelledby="tour-title">
       <div id="panorama" data-src="assets/recorrido-360.jpg" data-available="false" aria-label="Visor de recorrido 360 grados" hidden></div>
       <div class="tour-placeholder" id="tour-placeholder">
-        <img class="tour-fallback-image" src="assets/las-dunas-01.jpg" alt="Vista fija del comedor de Las Dunas; no es un recorrido 360°" fetchpriority="high" decoding="async">
+        <img class="tour-fallback-image" id="tour-photo-image" src="assets/negocio/recorrido-exterior.jpg" alt="Fachada de Las Dunas con miembros del equipo frente a la entrada" fetchpriority="high" decoding="async">
         <div class="tour-fallback-shade" aria-hidden="true"></div>
         <div class="tour-placeholder-content">
-          <div class="placeholder-mark" aria-hidden="true">360°</div>
-          <p class="kicker">Recorrido virtual</p>
-          <h1 id="tour-title">Descubre Las Dunas por dentro</h1>
-          <p>El panorama 360° real está pendiente de incorporar.</p>
-          <span class="fallback-caption">Fotografía fija del comedor · no es una vista 360°</span>
+          <p class="kicker">Recorrido fotográfico</p>
+          <h1 id="tour-title">Conoce Las Dunas</h1>
+          <p id="tour-photo-caption" aria-live="polite">Exterior · fachada y equipo</p>
+          <div class="tour-photo-switcher" role="group" aria-label="Fotografías del restaurante">
+            <button type="button" data-tour-photo="exterior" aria-pressed="true">Exterior</button>
+            <button type="button" data-tour-photo="interior" aria-pressed="false">Interior</button>
+          </div>
+          <span class="fallback-caption">Fotografías fijas · el panorama 360° real está pendiente</span>
         </div>
       </div>
       <div class="tour-instructions" id="tour-instructions" hidden>
