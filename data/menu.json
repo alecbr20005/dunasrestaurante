@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "currency": "EUR",
+  "dishes": [
+    {
+      "id": "tartar-atun-wakame",
+      "featured": true,
+      "name": "Tartar de atún con wakame",
+      "category": "pescado",
+      "description": null,
+      "ingredientsConfirmed": false,
+      "price": {
+        "amount": null,
+        "confirmed": false
+      },
+      "ingredients": [],
+      "allergens": {
+        "confirmed": false,
+        "items": [],
+        "crossContamination": null
+      },
+      "lastReviewed": null,
+      "image": "assets/platos/tartar-atun-wakame.jpg",
+      "model": {
+        "src": "assets/modelos/tartar-atun.glb",
+        "provenance": null
+      }
+    },
+    {
+      "id": "merluza-gulas-alioli-tinta",
+      "featured": true,
+      "name": "Merluza con gulas al ajillo y alioli de tinta de calamar",
+      "category": "pescado",
+      "description": null,
+      "ingredientsConfirmed": false,
+      "price": {
+        "amount": null,
+        "confirmed": false
+      },
+      "ingredients": [],
+      "allergens": {
+        "confirmed": false,
+        "items": [],
+        "crossContamination": null
+      },
+      "lastReviewed": null,
+      "image": "assets/platos/merluza-gulas-alioli-tinta.jpg",
+      "model": {
+        "src": "assets/modelos/merluza-gulas.glb",
+        "provenance": null
+      }
+    },
+    {
+      "id": "canelon-carrillada",
+      "featured": true,
+      "name": "Canelón de carrillada",
+      "category": "carne",
+      "description": null,
+      "ingredientsConfirmed": false,
+      "price": {
+        "amount": null,
+        "confirmed": false
+      },
+      "ingredients": [],
+      "allergens": {
+        "confirmed": false,
+        "items": [],
+        "crossContamination": null
+      },
+      "lastReviewed": null,
+      "image": "assets/platos/canelon-carrillada.jpg",
+      "model": {
+        "src": "assets/modelos/canelon-carrillada.glb",
+        "provenance": null
+      }
+    },
+    {
+      "id": "carrillada-iberica-px",
+      "featured": true,
+      "name": "Carrillada ibérica al PX",
+      "category": "carne",
+      "description": null,
+      "ingredientsConfirmed": false,
+      "price": {
+        "amount": null,
+        "confirmed": false
+      },
+      "ingredients": [],
+      "allergens": {
+        "confirmed": false,
+        "items": [],
+        "crossContamination": null
+      },
+      "lastReviewed": null,
+      "image": "assets/platos/carrillada-iberica-px.jpg",
+      "model": {
+        "src": "assets/modelos/carrillada-px.glb",
+        "provenance": null
+      }
+    },
+    {
+      "id": "pollo-curry-rojo",
+      "featured": true,
+      "name": "Tiras de pollo al curry rojo y mahonesa de soja",
+      "category": "carne",
+      "description": null,
+      "ingredientsConfirmed": false,
+      "price": {
+        "amount": null,
+        "confirmed": false
+      },
+      "ingredients": [],
+      "allergens": {
+        "confirmed": false,
+        "items": [],
+        "crossContamination": null
+      },
+      "lastReviewed": null,
+      "image": "assets/platos/pollo-curry-rojo.jpg",
+      "model": {
+        "src": "assets/modelos/pollo-curry.glb",
+        "provenance": null
+      }
+    }
+  ]
+}

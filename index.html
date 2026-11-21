@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
   <link rel="stylesheet" href="styles.css">
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -17,8 +19,8 @@
     </a>
     <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
     <nav class="nav" aria-label="Navegación principal">
+      <a href="#inicio">Recorrido</a>
       <a href="#carta">Carta</a>
-      <a href="#experiencia">Experiencia</a>
       <a href="#grupos">Grupos</a>
       <a href="#reservas">Reservas</a>
       <a href="#contacto">Contacto</a>
@@ -27,19 +29,20 @@
   </header>
 
   <main>
-    <section class="hero" id="inicio">
-      <img class="hero-photo" src="assets/las-dunas-01.jpg" alt="Fotografía auténtica publicada por Las Dunas">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <p class="eyebrow" data-i18n="eyebrow">Sevilla Este · Desde hace más de 25 años</p>
-        <h1 data-i18n="heroTitle">Tradición, creatividad<br>y sabor.</h1>
-        <p class="hero-lead" data-i18n="heroLead">Vinos y tapas con alma sevillana.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#carta" data-i18n="viewMenu">Ver carta</a>
-          <a class="button button-ghost" href="#reservas" data-i18n="reserve">Reservar</a>
-        </div>
+    <section class="tour-hero" id="inicio" aria-labelledby="tour-title">
+      <div id="panorama" aria-label="Visor de recorrido 360 grados"></div>
+      <div class="tour-placeholder" id="tour-placeholder">
+        <div class="placeholder-mark" aria-hidden="true">360°</div>
+        <p class="kicker">Recorrido virtual</p>
+        <h1 id="tour-title">Descubre Las Dunas por dentro</h1>
+        <p>El panorama 360° real estará disponible próximamente.</p>
       </div>
-      <a class="scroll-cue" href="#carta" aria-label="Ir a la carta"><span></span></a>
+      <div class="tour-instructions" id="tour-instructions" hidden>
+        <span class="drag-icon" aria-hidden="true">↔</span>
+        <span>Arrastra para explorar</span>
+        <button type="button" id="gyro-toggle" aria-label="Activar giroscopio">Giroscopio</button>
+      </div>
+      <a class="tour-menu-link" href="#carta">Ver carta</a>
     </section>
 
     <section class="intro section" id="carta">
@@ -71,33 +74,11 @@
       </a>
     </section>
 
-    <section class="featured section" id="experiencia">
-      <div class="section-heading on-dark">
-        <p class="kicker">Experiencia 3D</p>
-        <h2>Cinco platos, otra perspectiva</h2>
-        <p>Representaciones digitales ilustrativas. No son escaneos exactos de los platos.</p>
-      </div>
-      <div class="featured-grid" id="featured-grid"></div>
-    </section>
-
-    <section class="virtual section">
-      <div class="virtual-card">
-        <img src="assets/las-dunas-01.jpg" alt="Fotografía real publicada por Las Dunas">
-        <div class="virtual-overlay"></div>
-        <div class="virtual-content">
-          <p class="kicker">Recorrido virtual</p>
-          <h2>Conoce Las Dunas<br>antes de llegar</h2>
-          <p class="demo-label">Demo conceptual · fotografía real</p>
-          <button class="button button-primary" id="open-tour">Abrir recorrido</button>
-        </div>
-      </div>
-    </section>
-
     <section class="guide section" id="food-guide">
       <div class="guide-copy">
         <p class="kicker">Food Guide</p>
         <h2>¿Qué te apetece hoy?</h2>
-        <p>Busca por ingrediente o deja que te recomendemos un plato de nuestra selección verificada.</p>
+        <p>Busca por nombre o categoría. Los ingredientes y la información de alérgenos están pendientes de validación por el restaurante.</p>
         <label for="guide-input">Preferencia o ingrediente</label>
         <div class="guide-input-row">
           <input id="guide-input" type="text" placeholder="Ej. pescado, curry, carrillada">
@@ -214,17 +195,8 @@
     <div id="dish-detail"></div>
   </dialog>
 
-  <dialog id="tour-dialog" class="tour-dialog">
-    <button class="dialog-close tour-close" aria-label="Cerrar recorrido">×</button>
-    <div class="tour-view" id="tour-view">
-      <img src="assets/las-dunas-01.jpg" alt="Recorrido conceptual con fotografía real publicada por Las Dunas">
-      <button class="hotspot hotspot-one" data-tour="Entrada" aria-label="Entrada">1</button>
-      <button class="hotspot hotspot-two" data-tour="Comedor" aria-label="Comedor">2</button>
-      <div class="tour-caption"><strong>Recorrido conceptual</strong><span id="tour-label">Vista inicial</span></div>
-    </div>
-  </dialog>
-
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
