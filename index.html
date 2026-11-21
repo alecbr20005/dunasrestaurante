@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Las Dunas Vinos y Tapas - carta, reservas, grupos y experiencia digital en Sevilla Este.">
+  <meta name="description" content="Las Dunas Vinos y Tapas en Sevilla Este. Consulta la carta, solicita una reserva y descubre el restaurante.">
   <title>Las Dunas | Vinos y Tapas</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,18 +14,21 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#inicio" aria-label="Las Dunas, inicio">
+    <a class="brand" href="#inicio" aria-label="Las Dunas Vinos y Tapas, inicio">
       <img src="assets/logo.png" alt="Las Dunas Vinos y Tapas">
+      <span class="brand-copy"><strong>LAS DUNAS</strong><small>Vinos y Tapas · Sevilla Este</small></span>
     </a>
     <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
     <nav class="nav" aria-label="Navegación principal">
       <a href="#inicio">Recorrido</a>
+      <a href="#historia">Nosotros</a>
       <a href="#carta">Carta</a>
+      <a href="#cartas">Menús</a>
+      <a href="#food-guide">Food Guide</a>
       <a href="#grupos">Grupos</a>
       <a href="#reservas">Reservas</a>
       <a href="#contacto">Contacto</a>
     </nav>
-    <button class="lang" data-lang-toggle aria-label="Cambiar a inglés">ES / EN</button>
   </header>
 
   <main>
@@ -45,21 +48,30 @@
       <a class="tour-menu-link" href="#carta">Ver carta</a>
     </section>
 
+    <section class="story section" id="historia">
+      <div class="story-image">
+        <img src="assets/las-dunas-01.jpg" alt="Comedor de Las Dunas, fotografía publicada en su web oficial" loading="lazy" decoding="async">
+        <span>Fotografía de la web oficial</span>
+      </div>
+      <div class="story-copy">
+        <p class="kicker">Nuestra esencia · Más de 25 años</p>
+        <h2>Cocina con raíces.<br>Curiosidad por lo nuevo.</h2>
+        <p>En Las Dunas Vinos y Tapas nos gusta combinar la esencia de la cocina tradicional con nuevas formas de disfrutar la gastronomía. Cuidamos la materia prima, trabajamos cada detalle y queremos que cada visita sea una experiencia para recordar.</p>
+        <p class="story-note">Cultura gastronómica sevillana, cocina mediterránea, atención cercana y servicio ágil.</p>
+        <a class="text-link" href="#cartas">Descubre nuestras cartas <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+
     <section class="intro section" id="carta">
       <div class="section-heading">
-        <p class="kicker" data-i18n="menuKicker">Nuestra carta</p>
-        <h2 data-i18n="menuTitle">Sabores que cuentan una historia</h2>
-      </div>
-      <div class="category-tabs" role="tablist" aria-label="Tipos de carta">
-        <button class="tab active" data-category="general" role="tab">Carta general</button>
-        <button class="tab" data-category="grupos" role="tab">Carta de grupos</button>
-        <button class="tab" data-category="empresa" role="tab">Menús concertados</button>
-        <button class="tab" data-category="bodega" role="tab">Bodega</button>
+        <p class="kicker">Una selección de la casa</p>
+        <h2>Platos para descubrir</h2>
+        <p class="section-lead">Cinco propuestas destacadas. Para consultar la carta completa, los grupos y los menús de empresa, visita la sección de cartas.</p>
       </div>
       <div class="menu-layout">
         <aside class="menu-filters">
-          <label for="menu-search">Buscar plato</label>
-          <input id="menu-search" type="search" placeholder="Ingrediente o nombre">
+          <label for="menu-search">Encuentra un plato</label>
+          <input id="menu-search" type="search" placeholder="Nombre del plato">
           <div class="filter-pills" aria-label="Filtros">
             <button class="filter active" data-filter="todos">Todos</button>
             <button class="filter" data-filter="pescado">Pescado</button>
@@ -69,9 +81,44 @@
         </aside>
         <div class="dish-grid" id="dish-grid"></div>
       </div>
-      <a class="text-link" href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/carta_general_2026_4t_web.pdf" target="_blank" rel="noopener" data-i18n="openOfficial">
-        Abrir carta oficial vigente ↗
-      </a>
+      <p class="allergen-reminder">Precios, descripciones, ingredientes y alérgenos de esta selección pendientes de validación por el restaurante. Si tienes alergias o intolerancias, consulta al personal.</p>
+    </section>
+
+    <section class="documents section" id="cartas">
+      <div class="section-heading">
+        <p class="kicker">La propuesta completa</p>
+        <h2>Cartas y menús</h2>
+        <p class="section-lead">Consulta los documentos oficiales publicados por Las Dunas. Los precios y la disponibilidad deben confirmarse con el restaurante.</p>
+      </div>
+      <div class="document-grid">
+        <article class="document-card">
+          <span class="document-index">01 / CARTA</span>
+          <h3>Carta general</h3>
+          <p>La propuesta gastronómica del restaurante.</p>
+          <div class="document-actions">
+            <a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/carta_general_2026_4t_web.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
+            <a href="assets/cartas/carta_general_2026_4t_web.pdf" download="carta_general_2026_4t_web.pdf">Descargar PDF ↓</a>
+          </div>
+        </article>
+        <article class="document-card">
+          <span class="document-index">02 / GRUPOS</span>
+          <h3>Carta de grupos</h3>
+          <p>A partir de 8 comensales, el servicio es de platos en lugar de tapas.</p>
+          <div class="document-actions">
+            <a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/carta_grupos_2026_4t_web.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
+            <a href="assets/cartas/carta_grupos_2026_4t_web.pdf" download="carta_grupos_2026_4t_web.pdf">Descargar PDF ↓</a>
+          </div>
+        </article>
+        <article class="document-card">
+          <span class="document-index">03 / EMPRESA</span>
+          <h3>Menús concertados</h3>
+          <p>Opciones publicadas para comidas de empresa. Consulta disponibilidad y condiciones.</p>
+          <div class="document-actions">
+            <a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/Menu_empresa_2026_web.pdf" target="_blank" rel="noopener">Abrir PDF ↗</a>
+            <a href="assets/cartas/Menu_empresa_2026_web.pdf" download="Menu_empresa_2026_web.pdf">Descargar PDF ↓</a>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section class="guide section" id="food-guide">
@@ -97,8 +144,8 @@
         <h2>A partir de 8 personas,<br>servimos platos.</h2>
         <p>Comidas de empresa, celebraciones y encuentros con amigos. Consulta los menús concertados vigentes y solicita presupuesto.</p>
         <div class="groups-actions">
-          <a class="button button-dark" href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/carta_grupos_2026_4t_web.pdf" target="_blank" rel="noopener">Carta de grupos</a>
-          <a class="button button-outline" href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/Menu_empresa_2026_web.pdf" target="_blank" rel="noopener">Menú de empresa</a>
+          <a class="button button-dark" href="#cartas">Ver cartas y menús</a>
+          <a class="button button-outline" href="tel:+34955126417">Llamar para consultar</a>
         </div>
       </div>
       <form class="group-form" id="group-form">
@@ -107,6 +154,7 @@
           <label>Nombre<input name="name" required></label>
           <label>Teléfono<input name="phone" type="tel" required></label>
           <label>Fecha<input name="date" type="date" required></label>
+          <label>Hora<input name="time" type="time" required></label>
           <label>Personas<input name="people" type="number" min="8" value="8" required></label>
         </div>
         <label>Tipo de ocasión
@@ -117,6 +165,7 @@
             <option>Reunión</option>
           </select>
         </label>
+        <label>Observaciones<textarea name="notes" rows="3" placeholder="Cuéntanos qué necesitas"></textarea></label>
         <button class="button button-primary" type="submit">Preparar solicitud</button>
       </form>
     </section>
@@ -125,7 +174,7 @@
       <div class="reservation-copy">
         <p class="kicker">Reservas</p>
         <h2>Tu mesa te espera</h2>
-        <p>Lunes descanso · Mar-Vie 08:30-00:00 · Sáb 09:30-00:00 · Dom 09:30-16:30</p>
+        <p>Lunes cerrado · Martes a viernes 08:30–00:00 · Sábado 09:30–00:00 · Domingo 09:30–16:30</p>
         <div class="contact-quick">
           <a href="tel:+34955126417">955 126 417</a>
           <a href="tel:+34691664814">691 664 814</a>
@@ -160,24 +209,47 @@
       </div>
       <div class="social-grid">
         <a class="social-card instagram" href="https://www.instagram.com/dunassevilla/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="18" cy="6" r="1"></circle></svg>
           <span>Instagram</span><strong>@dunassevilla</strong><b>↗</b>
         </a>
         <a class="social-card tripadvisor" href="https://www.tripadvisor.es/Restaurant_Review-g187443-d13198799-Reviews-Las_Dunas-Seville_Province_of_Seville_Andalucia.html" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 24" aria-hidden="true"><path d="M3 8c3-4 8-6 13-6s10 2 13 6l-3 2c1 2 1 4 0 6-2 4-7 5-10 2-3 3-8 2-10-2-1-2-1-4 0-6L3 8Z"></path><circle cx="11" cy="12" r="3"></circle><circle cx="21" cy="12" r="3"></circle><circle cx="11" cy="12" r="1"></circle><circle cx="21" cy="12" r="1"></circle></svg>
           <span>Tripadvisor</span><strong>Ver opiniones</strong><b>↗</b>
         </a>
+        <a class="social-card official-site" href="https://www.lasdunassevilla.com/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg>
+          <span>Web oficial</span><strong>lasdunassevilla.com</strong><b>↗</b>
+        </a>
+      </div>
+      <div class="social-feed">
+        <div><p class="kicker">Instagram · publicaciones oficiales</p><p>El feed no está conectado. Visita el perfil para ver las publicaciones auténticas del restaurante.</p></div>
+        <a class="text-link" href="https://www.instagram.com/dunassevilla/" target="_blank" rel="noopener">Ver Instagram ↗</a>
       </div>
     </section>
 
     <section class="contact section" id="contacto">
       <div class="map-card">
-        <iframe title="Mapa de ubicación de Las Dunas" src="https://www.openstreetmap.org/export/embed.html?bbox=-5.9660%2C37.3980%2C-5.9580%2C37.4040&amp;layer=mapnik&amp;marker=37.4010%2C-5.9620" loading="lazy"></iframe>
+        <iframe title="Mapa de Google Maps: Las Dunas Vinos y Tapas, Calle Flor de Albahaca 7" src="https://maps.google.com/maps?q=Las+Dunas+Vinos+y+Tapas%2C+Calle+Flor+de+Albahaca+7%2C+41020+Sevilla&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
       <div class="contact-card">
         <p class="kicker">Visítanos</p>
         <h2>C/ Flor de Albahaca, 7<br>Local 2</h2>
         <p>41020 Sevilla · Sevilla Este</p>
+        <div class="contact-numbers">
+          <a href="tel:+34955126417">Teléfono fijo <strong>+34 955 126 417</strong></a>
+          <a href="tel:+34691664814">Móvil <strong>+34 691 664 814</strong></a>
+        </div>
+        <div class="opening-hours">
+          <h3>Horario publicado</h3>
+          <dl>
+            <div><dt>Lunes</dt><dd>Cerrado</dd></div>
+            <div><dt>Martes–viernes</dt><dd>08:30–00:00</dd></div>
+            <div><dt>Sábado</dt><dd>09:30–00:00</dd></div>
+            <div><dt>Domingo</dt><dd>09:30–16:30</dd></div>
+          </dl>
+        </div>
         <div class="contact-actions">
-          <a class="button button-dark" href="https://www.google.com/maps/search/?api=1&query=C%2F+Flor+de+Albahaca+7+41020+Sevilla" target="_blank" rel="noopener">Cómo llegar</a>
+          <a class="button button-dark" href="https://www.google.com/maps/search/?api=1&amp;query=Las+Dunas+Vinos+y+Tapas%2C+Calle+Flor+de+Albahaca+7%2C+41020+Sevilla" target="_blank" rel="noopener">Cómo llegar</a>
           <a class="button button-outline" href="https://wa.me/34691664814" target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
@@ -186,8 +258,8 @@
 
   <footer>
     <img src="assets/logo.png" alt="Las Dunas">
-    <p>Las Dunas Vinos y Tapas · Sevilla Este</p>
-    <div><a href="#inicio">Inicio</a><a href="#carta">Carta</a><a href="#reservas">Reservas</a></div>
+    <p><strong>LAS DUNAS</strong><br>Vinos y Tapas · Sevilla Este</p>
+    <div><a href="#inicio">Recorrido</a><a href="#historia">Nosotros</a><a href="#carta">Carta</a><a href="#cartas">Menús</a><a href="#reservas">Reservas</a></div>
   </footer>
 
   <dialog id="dish-dialog" class="dialog">

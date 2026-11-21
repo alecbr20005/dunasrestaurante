@@ -1,11 +1,6 @@
 const dishGrid = document.querySelector("#dish-grid");
 const dishDialog = document.querySelector("#dish-dialog");
 const dishDetail = document.querySelector("#dish-detail");
-const menuExtras = [
-  { name:"Tako de atún con pesto de albahaca", category:"pescado", description:"Descripción pendiente de validación.", price:{ amount:null, confirmed:false }, ingredients:[], ingredientsConfirmed:false, allergens:{ confirmed:false, items:[], crossContamination:null } },
-  { name:"Merluza con salsa de queso gratinado", category:"pescado", description:"Descripción pendiente de validación.", price:{ amount:null, confirmed:false }, ingredients:[], ingredientsConfirmed:false, allergens:{ confirmed:false, items:[], crossContamination:null } },
-  { name:"Fresones de mousse de pato", category:"carne", description:"Descripción pendiente de validación.", price:{ amount:null, confirmed:false }, ingredients:[], ingredientsConfirmed:false, allergens:{ confirmed:false, items:[], crossContamination:null } }
-];
 let featured = [];
 let menuItems = [];
 
@@ -136,7 +131,7 @@ async function loadMenuData() {
     const data = await response.json();
     if (!Array.isArray(data.dishes) || data.dishes.length !== 5) throw new Error("data/menu.json debe contener los cinco platos destacados");
     featured = data.dishes;
-    menuItems = [...featured, ...menuExtras];
+    menuItems = featured;
     renderMenu();
   } catch (error) {
     dishGrid.innerHTML = `<p class="menu-error">No se pudo cargar la carta. ${error.message}</p>`;
@@ -156,20 +151,6 @@ document.querySelector("#menu-search").addEventListener("input", event => {
   const query = event.target.value.toLowerCase().trim();
   document.querySelectorAll(".dish-card").forEach(card => card.style.display = card.dataset.name.includes(query) ? "" : "none");
 });
-
-document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => {
-  document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
-  tab.classList.add("active");
-  if (tab.dataset.category === "bodega") {
-    dishGrid.innerHTML = `<article class="dish-card"><h3>Bodega</h3><p>Consulta la selección vigente en el restaurante. La lista detallada requiere verificar la carta oficial actualizada.</p></article>`;
-  } else if (tab.dataset.category === "empresa") {
-    dishGrid.innerHTML = `<article class="dish-card"><h3>Menús concertados</h3><p><a href="https://www.lasdunassevilla.com/wp-content/uploads/2026/10/Menu_empresa_2026_web.pdf" target="_blank">Abrir PDF oficial 2026</a></p></article>`;
-  } else if (tab.dataset.category === "grupos") {
-    dishGrid.innerHTML = featured.map((dish, index) => cardHtml(dish, menuItems.indexOf(dish))).join("");
-    bindDishCards(dishGrid);
-    bindDishImages(dishGrid);
-  } else renderMenu();
-}));
 
 document.querySelectorAll(".dialog-close").forEach(button => button.addEventListener("click", () => button.closest("dialog").close()));
 dishDialog.addEventListener("click", event => { if (event.target === dishDialog) dishDialog.close(); });
@@ -276,7 +257,7 @@ document.querySelector("#reservation-form").addEventListener("submit", event => 
 document.querySelector("#group-form").addEventListener("submit", event => {
   event.preventDefault();
   const data = Object.fromEntries(new FormData(event.target));
-  const text = `Hola, quiero solicitar presupuesto para un grupo:\nNombre: ${data.name}\nTeléfono: ${data.phone}\nFecha: ${data.date}\nPersonas: ${data.people}\nOcasión: ${data.occasion}`;
+  const text = `Hola, quiero solicitar presupuesto para un grupo:\nNombre: ${data.name}\nTeléfono: ${data.phone}\nFecha: ${data.date}\nHora: ${data.time}\nPersonas: ${data.people}\nOcasión: ${data.occasion}\nObservaciones: ${data.notes || "Ninguna"}`;
   window.open(whatsAppUrl("34691664814", text), "_blank", "noopener");
   showToast("Solicitud de grupo preparada.");
 });
@@ -284,9 +265,12 @@ document.querySelector("#group-form").addEventListener("submit", event => {
 const menuToggle = document.querySelector(".menu-toggle");
 menuToggle.addEventListener("click", () => {
   const nav = document.querySelector(".nav");
-  nav.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", nav.classList.contains("open"));
+  const isOpen = nav.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", isOpen);
+  menuToggle.setAttribute("aria-label", isOpen ? "Cerrar menú" : "Abrir menú");
 });
-document.querySelectorAll(".nav a").forEach(link => link.addEventListener("click", () => document.querySelector(".nav").classList.remove("open")));
-
-document.querySelector("[data-lang-toggle]").addEventListener("click", () => showToast("Versión inglesa en preparación"));
+document.querySelectorAll(".nav a").forEach(link => link.addEventListener("click", () => {
+  document.querySelector(".nav").classList.remove("open");
+  menuToggle.setAttribute("aria-expanded", "false");
+  menuToggle.setAttribute("aria-label", "Abrir menú");
+}));
